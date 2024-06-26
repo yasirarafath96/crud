@@ -17,7 +17,7 @@ const Details = ({ employees }) => {
   return (
     <div className="container">
       <h1>Employee Details</h1>
-      <button onClick={() => navigate("/")} className="btn btn-secondary mb-2">
+      <button onClick={() => navigate("/")} className="btn btn-secondary me-2">
         Back
       </button>
       <button

@@ -49,7 +49,7 @@ const Home = ({ employees, onDeleteEmployee }) => {
             <tr key={employee.id}>
               <td>
                 <button
-                  className="btn btn-link"
+                  className="btn btn-link text-decoration-none"
                   onClick={() => handleDetails(employee.id)}
                 >
                   {employee.name}
@@ -60,14 +60,14 @@ const Home = ({ employees, onDeleteEmployee }) => {
               <td>{employee.gender}</td>
               <td>
                 <button
-                  className="btn btn-primary"
+                  className="btn btn-primary me-2"
                   onClick={() => handleEdit(employee.id)}
                 >
                   Edit
                 </button>
                 <button
                   type="button"
-                  className="btn btn-danger ml-2"
+                  className="btn btn-danger "
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
                   onClick={() => handleDeleteClick(employee.id)}

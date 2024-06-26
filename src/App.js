@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import AddEmployee from "./components/AddEmployee";
-import EmployeeDetails from "./components/EditEmployee";
+import EditEmpployee from "./components/EditEmployee";
 import Details from "./components/Details";
 
 const App = () => {
@@ -47,7 +47,7 @@ const App = () => {
         <Route
           path="/employee/:id"
           element={
-            <EmployeeDetails
+            <EditEmpployee
               employees={employees}
               onUpdateEmployee={updateEmployee}
             />

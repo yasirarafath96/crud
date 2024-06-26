@@ -150,7 +150,7 @@ const AddEmployee = ({ onAddEmployee }) => {
             <button
               type="button"
               onClick={addHobby}
-              className="btn btn-secondary mt-2"
+              className="btn btn-success mt-2"
             >
               Add Hobby
             </button>

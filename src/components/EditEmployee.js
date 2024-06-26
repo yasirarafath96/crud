@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-const EmployeeDetails = ({ employees, onUpdateEmployee }) => {
+const EditEmpployee = ({ employees, onUpdateEmployee }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const employee = employees.find((emp) => emp.id === parseInt(id));
@@ -166,7 +166,7 @@ const EmployeeDetails = ({ employees, onUpdateEmployee }) => {
             <button
               type="button"
               onClick={addHobby}
-              className="btn btn-secondary mt-2"
+              className="btn btn-success mt-2"
             >
               Add Hobby
             </button>
@@ -181,4 +181,4 @@ const EmployeeDetails = ({ employees, onUpdateEmployee }) => {
   );
 };
 
-export default EmployeeDetails;
+export default EditEmpployee;
