@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
+const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 const EditEmpployee = ({ employees, onUpdateEmployee }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const employee = employees.find((emp) => emp.id === parseInt(id));
 
+  const [invalidEmail, setInvalidEmail] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     role: "",
@@ -34,11 +37,34 @@ const EditEmpployee = ({ employees, onUpdateEmployee }) => {
   };
 
   const addHobby = () => {
-    setFormData({ ...formData, hobbies: [...formData.hobbies, ""] });
+    // only upto 4 hobbies only
+    if (formData.hobbies.length < 3) {
+      setFormData({ ...formData, hobbies: [...formData.hobbies, ""] });
+    }
+  };
+
+  // handleing age  btwn 10 and 65 nly
+  const handleAgeChange = (e) => {
+    let value = e.target.value;
+    if (value < 10) {
+      value = 10;
+    } else if (value > 65) {
+      value = 65;
+    }
+    handleChange({ target: { name: "age", value } });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Valid Email
+    if (!emailPattern.test(formData.email)) {
+      setInvalidEmail(() => {
+        console.log("Invalid Email ENtered");
+        alert("Enter valid Email");
+      });
+      return;
+    }
+    //setInvalidEmail("");
     onUpdateEmployee(formData);
     navigate("/");
   };
@@ -49,7 +75,7 @@ const EditEmpployee = ({ employees, onUpdateEmployee }) => {
 
   return (
     <div className="container">
-      <h1>Employee Details</h1>
+      <h1>Edit Employee</h1>
       <button onClick={() => navigate("/")} className="btn btn-secondary mb-2">
         Back
       </button>
@@ -102,7 +128,7 @@ const EditEmpployee = ({ employees, onUpdateEmployee }) => {
               type="number"
               name="age"
               value={formData.age}
-              onChange={handleChange}
+              onChange={handleAgeChange}
               className="form-control"
               required
             />

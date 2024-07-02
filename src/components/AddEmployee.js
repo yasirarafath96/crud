@@ -1,6 +1,7 @@
-// src/components/AddEmployee.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const AddEmployee = ({ onAddEmployee }) => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ const AddEmployee = ({ onAddEmployee }) => {
   });
 
   const navigate = useNavigate();
+  const [invalidEmail, setInvalidEmail] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,13 +29,36 @@ const AddEmployee = ({ onAddEmployee }) => {
   };
 
   const addHobby = () => {
-    setFormData({ ...formData, hobbies: [...formData.hobbies, ""] });
+    // only upto 4 hobbies only
+    if (formData.hobbies.length < 3) {
+      setFormData({ ...formData, hobbies: [...formData.hobbies, ""] });
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Valid Email
+    if (!emailPattern.test(formData.email)) {
+      setInvalidEmail(() => {
+        console.log("Invalid Email ENtered");
+        alert("Enter valid Email");
+      });
+      return;
+    }
+    setInvalidEmail("");
     onAddEmployee(formData);
     navigate("/");
+  };
+
+  // handleing age  btwn 10 and 65 nly
+  const handleAgeChange = (e) => {
+    let value = e.target.value;
+    if (value < 10) {
+      value = 10;
+    } else if (value > 65) {
+      value = 65;
+    }
+    handleChange({ target: { name: "age", value } });
   };
 
   return (
@@ -88,7 +113,7 @@ const AddEmployee = ({ onAddEmployee }) => {
               type="number"
               name="age"
               value={formData.age}
-              onChange={handleChange}
+              onChange={handleAgeChange}
               className="form-control"
               required
             />
