@@ -1,5 +1,8 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Temp from "./Temp";
+import axios from "axios";
 
 const Home = ({ employees, onDeleteEmployee }) => {
   const navigate = useNavigate();
@@ -21,10 +24,40 @@ const Home = ({ employees, onDeleteEmployee }) => {
     setEmployeeToDelete(id);
   };
 
+  // const handleConfirmDelete = () => {
+  //   if (employeeToDelete !== null) {
+  //     onDeleteEmployee(employeeToDelete);
+  //     // Reset the state after deletion
+  //     setEmployeeToDelete(null);
+  //   }
+  // };
+
   const handleConfirmDelete = () => {
     if (employeeToDelete !== null) {
-      onDeleteEmployee(employeeToDelete);
-      setEmployeeToDelete(null); // Reset the state after deletion
+      axios
+        .delete(`http://localhost:5000/employees/${employeeToDelete}`)
+        .then((response) => {
+          console.log(response.data.message);
+          onDeleteEmployee(employeeToDelete);
+          setEmployeeToDelete(null); // Reset the state after deletion
+        })
+        .catch((error) => {
+          if (error.response) {
+            // Server responded with a status other than 200 range
+            console.error("Server error:", error.response.data);
+            alert(`Server error: ${error.response.data.message}`);
+          } else if (error.request) {
+            // Request was made but no response was received
+            console.error("Network error:", error.request);
+            alert(
+              "Internet Not connect Please check your connection and try it again."
+            );
+          } else {
+            // Something else caused the error
+            console.error("Error:", error.message);
+            alert(`Error: ${error.message}`);
+          }
+        });
     }
   };
 
@@ -129,127 +162,3 @@ const Home = ({ employees, onDeleteEmployee }) => {
 };
 
 export default Home;
-
-/*
-
-import React from "react";
-import { useNavigate } from "react-router-dom";
-
-const Home = ({ employees, onDeleteEmployee }) => {
-  const navigate = useNavigate();
-
-  const handleAdd = () => {
-    navigate("/add");
-  };
-
-  const handleEdit = (id) => {
-    navigate(`/employee/${id}`);
-  };
-
-  const handleDetails = (id) => {
-    navigate(`/details/${id}`);
-  };
-
-  const Delete = (id) => {
-    onDeleteEmployee(id);
-  };
-
-  return (
-    <div className="container">
-      <h1>Employees</h1>
-      <button onClick={handleAdd} className="btn btn-primary mb-2">
-        Add
-      </button>
-      <table className="table table-success table-striped table-hover table-bordered">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Email</th>
-            <th>Gender</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {employees.map((employee) => (
-            <tr key={employee.id}>
-              <td>
-                <button
-                  className="btn btn-link"
-                  onClick={() => handleDetails(employee.id)}
-                >
-                  {employee.name}
-                </button>
-              </td>
-              <td>{employee.role}</td>
-              <td>{employee.email}</td>
-              <td>{employee.gender}</td>
-              <td>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handleEdit(employee.id)}
-                >
-                  Edit
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-danger ml-2"
-                  data-bs-toggle="modal"
-                  data-bs-target="#exampleModal"
-                  onClick={() => Delete(employee.id)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-          
-          <div
-            class="modal fade"
-            id="exampleModal"
-            tabindex="-1"
-            aria-labelledby="exampleModalLabel"
-            aria-hidden="true"
-          >
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">
-                    Modal title
-                  </h1>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <div class="modal-body">...</div>
-                <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
-                    No
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-primary"
-                    onClick={() => DeleteOne()}
-                  >
-                    Yes
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </tbody>
-      </table>
-    </div>
-  );
-};
-
-export default Home;
-
-*/

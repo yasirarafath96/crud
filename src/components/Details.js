@@ -5,6 +5,7 @@ const Details = ({ employees }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const employee = employees.find((emp) => emp.id === parseInt(id));
+  // console.log(employee.map((temp) => console.log(temp)));
 
   if (!employee) {
     return <div>Employee not found</div>;

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-const AddEmployee = ({ onAddEmployee }) => {
+const AddEmployee = ({ onAddEmployee, hobbies }) => {
   const [formData, setFormData] = useState({
     name: "",
     role: "",
@@ -29,25 +30,59 @@ const AddEmployee = ({ onAddEmployee }) => {
   };
 
   const addHobby = () => {
-    // only upto 4 hobbies only
+    // only upto 3  hobbies only
     if (formData.hobbies.length < 3) {
       setFormData({ ...formData, hobbies: [...formData.hobbies, ""] });
     }
   };
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   // Valid Email
+  //   if (!emailPattern.test(formData.email)) {
+  //     setInvalidEmail(() => {
+  //       console.log("Invalid Email ENtered");
+  //       alert("Enter valid Email");
+  //     });
+  //     return;
+  //   }
+  //   setInvalidEmail("");
+  //   onAddEmployee(formData);
+  //   navigate("/");
+  // };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Valid Email
     if (!emailPattern.test(formData.email)) {
       setInvalidEmail(() => {
-        console.log("Invalid Email ENtered");
+        console.log("Invalid Email Entered");
         alert("Enter valid Email");
       });
       return;
     }
     setInvalidEmail("");
-    onAddEmployee(formData);
-    navigate("/");
+
+    axios
+      .post("http://localhost:5000/employees", formData)
+      .then((response) => {
+        console.log(response.data.message);
+        onAddEmployee(response.data.employee);
+        navigate("/");
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.error("Server error:", error.response.data);
+          alert(`Server error: ${error.response.data.message}`);
+        } else if (error.request) {
+          console.error("Network error:", error.request);
+          alert(
+            "Internet Not connect Please check your connection and try it again."
+          );
+        } else {
+          console.error("Error:", error.message);
+          alert(`Error: ${error.message}`);
+        }
+      });
   };
 
   // handleing age  btwn 10 and 65 nly
