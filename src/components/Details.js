@@ -18,7 +18,10 @@ const Details = ({ employees }) => {
   return (
     <div className="container">
       <h1>Employee Details</h1>
-      <button onClick={() => navigate("/")} className="btn btn-secondary me-2">
+      <button
+        onClick={() => navigate("/Home")}
+        className="btn btn-secondary me-2"
+      >
         Back
       </button>
       <button
@@ -27,6 +30,12 @@ const Details = ({ employees }) => {
       >
         Edit
       </button>
+      <div className="row mb-3">
+        <label className="col-sm-2 col-form-label">Employee ID:</label>
+        <div className="col-sm-6">
+          <p className="form-control-plaintext">{employee.id}</p>
+        </div>
+      </div>
       <div className="row mb-3">
         <label className="col-sm-2 col-form-label">Name:</label>
         <div className="col-sm-6">

@@ -37,19 +37,17 @@ const EditEmpployee = ({ employees, onUpdateEmployee }) => {
   };
 
   const addHobby = () => {
-    // only upto 4 hobbies only
     if (formData.hobbies.length < 3) {
       setFormData({ ...formData, hobbies: [...formData.hobbies, ""] });
     }
   };
 
-  // handleing age  btwn 10 and 65 nly
   const handleAgeChange = (e) => {
     let value = e.target.value;
-    if (value < 10) {
-      value = 10;
-    } else if (value > 65) {
-      value = 65;
+    if (value < 18) {
+      value = 18;
+    } else if (value > 45) {
+      value = 45;
     }
     handleChange({ target: { name: "age", value } });
   };
@@ -64,9 +62,8 @@ const EditEmpployee = ({ employees, onUpdateEmployee }) => {
       });
       return;
     }
-    //setInvalidEmail("");
     onUpdateEmployee(formData);
-    navigate("/");
+    navigate("/Home");
   };
 
   if (!employee) {

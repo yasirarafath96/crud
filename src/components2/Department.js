@@ -1,94 +1,96 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import axios from "axios";
 
-const Home = ({ employees, onDeleteEmployee }) => {
+function Department({ departments, onDeleteDepartment }) {
   const navigate = useNavigate();
-  const [employeeToDelete, setEmployeeToDelete] = useState(null);
+  const [departmentToDelete, setDepartmentToDelete] = useState(null);
+
+  console.log(departments);
+
+  const handleAdd = () => {
+    navigate("/AddDepartments");
+  };
+
+  const handleEdit = (id) => {
+    navigate(`/department/${id}`);
+  };
+
+  const handleDetails = (id) => {
+    navigate(`/depdetails/${id}`);
+  };
 
   const handleDeleteClick = (id) => {
-    setEmployeeToDelete(id);
+    setDepartmentToDelete(id);
   };
 
   const handleConfirmDelete = () => {
-    if (employeeToDelete !== null) {
+    if (departmentToDelete !== null) {
       axios
-        .delete(`http://localhost:5000/employees/${employeeToDelete}`)
+        .delete(`http://localhost:5000/departments/${departmentToDelete}`)
         .then((response) => {
           console.log(response.data.message);
-          onDeleteEmployee(employeeToDelete);
-          setEmployeeToDelete(null); // Reset the state after deletion
+          onDeleteDepartment(departmentToDelete);
+          setDepartmentToDelete(null);
         })
         .catch((error) => {
           if (error.response) {
-            // Server responded with a status other than 200 range
             console.error("Server error:", error.response.data);
             alert(`Server error: ${error.response.data.message}`);
           } else if (error.request) {
-            // Request was made but no response was received
             console.error("Network error:", error.request);
             alert(
               "Internet Not connect Please check your connection and try it again."
             );
           } else {
-            // Something else caused the error
             console.error("Error:", error.message);
             alert(`Error: ${error.message}`);
           }
         });
     }
   };
-
   return (
     <div className="container">
-      <h1>Employees</h1>
-      <button
-        onClick={() => navigate("/")}
-        className="btn btn-secondary mx-2 mb-2"
-      >
-        Back
-      </button>
-      <button onClick={() => navigate("/add")} className="btn btn-primary mb-2">
+      <h1>Departments</h1>
+      <button onClick={handleAdd} className="btn btn-primary mb-2">
         Add
       </button>
       <table className="table table-success table-striped table-hover table-bordered">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Email</th>
-            <th>Gender</th>
+            <th>Department Name</th>
+            <th>Head of Department</th>
+            <th>Location</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {employees.map((employee) => (
-            <tr key={employee.id}>
+          {departments.map((department) => (
+            <tr key={department.id}>
               <td>
                 <button
                   className="btn btn-link text-decoration-none"
-                  onClick={() => navigate(`/details/${employee.id}`)}
+                  onClick={() => handleDetails(department.id)}
                 >
-                  {employee.name}
+                  {department.name}
                 </button>
               </td>
-              <td>{employee.role}</td>
-              <td>{employee.email}</td>
-              <td>{employee.gender}</td>
+              <td>{department.head}</td>
+              <td>{department.location}</td>
               <td>
                 <button
                   className="btn btn-primary me-2"
-                  onClick={() => navigate(`/employee/${employee.id}`)   }
+                  onClick={() => handleEdit(department.id)}
                 >
                   Edit
                 </button>
                 <button
                   type="button"
-                  className="btn btn-danger "
+                  className="btn btn-danger"
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
-                  onClick={() => handleDeleteClick(`/details/${employee.id}`)}
+                  onClick={() => handleDeleteClick(department.id)}
                 >
                   Delete
                 </button>
@@ -98,6 +100,7 @@ const Home = ({ employees, onDeleteEmployee }) => {
         </tbody>
       </table>
 
+      {/* Modal */}
       <div
         className="modal fade"
         id="exampleModal"
@@ -119,7 +122,7 @@ const Home = ({ employees, onDeleteEmployee }) => {
               ></button>
             </div>
             <div className="modal-body">
-              Are you sure you want to delete this employee?
+              Are you sure you want to delete this department?
             </div>
             <div className="modal-footer">
               <button
@@ -143,6 +146,6 @@ const Home = ({ employees, onDeleteEmployee }) => {
       </div>
     </div>
   );
-};
+}
 
-export default Home;
+export default Department;

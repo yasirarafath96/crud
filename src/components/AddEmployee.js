@@ -4,7 +4,7 @@ import axios from "axios";
 
 const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-const AddEmployee = ({ onAddEmployee, hobbies }) => {
+const AddEmployee = ({ onAddEmployee, fetchEmployees, employees }) => {
   const [formData, setFormData] = useState({
     name: "",
     role: "",
@@ -36,68 +36,77 @@ const AddEmployee = ({ onAddEmployee, hobbies }) => {
     }
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   // Valid Email
-  //   if (!emailPattern.test(formData.email)) {
-  //     setInvalidEmail(() => {
-  //       console.log("Invalid Email ENtered");
-  //       alert("Enter valid Email");
-  //     });
-  //     return;
-  //   }
-  //   setInvalidEmail("");
-  //   onAddEmployee(formData);
-  //   navigate("/");
-  // };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!emailPattern.test(formData.email)) {
-      setInvalidEmail(() => {
-        console.log("Invalid Email Entered");
-        alert("Enter valid Email");
-      });
-      return;
-    }
-    setInvalidEmail("");
-
-    axios
-      .post("http://localhost:5000/employees", formData)
-      .then((response) => {
-        console.log(response.data.message);
-        onAddEmployee(response.data.employee);
-        navigate("/");
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.error("Server error:", error.response.data);
-          alert(`Server error: ${error.response.data.message}`);
-        } else if (error.request) {
-          console.error("Network error:", error.request);
-          alert(
-            "Internet Not connect Please check your connection and try it again."
-          );
-        } else {
-          console.error("Error:", error.message);
-          alert(`Error: ${error.message}`);
-        }
-      });
-  };
-
   // handleing age  btwn 10 and 65 nly
   const handleAgeChange = (e) => {
     let value = e.target.value;
-    if (value < 10) {
-      value = 10;
-    } else if (value > 65) {
-      value = 65;
+    if (value < 18) {
+      value = 18;
+    } else if (value > 45) {
+      value = 45;
     }
     handleChange({ target: { name: "age", value } });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!emailPattern.test(formData.email)) {
+      setInvalidEmail("Invalid Email Entered");
+      alert("Enter valid Email");
+      return;
+    }
+    setInvalidEmail("");
+
+    // toggles alert
+    if (checkDuplicateEmail(formData.email)) {
+      alert("Email already exists. Please enter a different email.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/employees",
+        formData
+      );
+      console.log(response.data.message);
+      onAddEmployee(response.data.employee);
+      await fetchEmployees();
+      navigate("/Home");
+    } catch (error) {
+      if (error.response) {
+        console.error("Server error:", error.response.data);
+        alert(`Server error: ${error.response.data.message}`);
+      } else if (error.request) {
+        console.error("Network error:", error.request);
+        alert(
+          "Internet Not connect Please check your connection and try it again."
+        );
+      } else {
+        console.error("Error:", error.message);
+        alert(`Error: ${error.message}`);
+      }
+    }
+  };
+
+  // email check
+  const checkDuplicateEmail = (email) => {
+    for (let i = 0; i < employees.length; i++) {
+      if (employees[i].email === email) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  function check() {
+    console.log(formData.email);
+    console.log(checkDuplicateEmail());
+    return <p>{} - check output</p>;
+  }
+
   return (
     <div className="container">
+      <button onClick={check}>check</button>
+
       <h1>Add Employee</h1>
       <form onSubmit={handleSubmit}>
         <div className="row mb-3">
@@ -225,3 +234,56 @@ const AddEmployee = ({ onAddEmployee, hobbies }) => {
 };
 
 export default AddEmployee;
+
+/*
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!emailPattern.test(formData.email)) {
+      setInvalidEmail(() => {
+        console.log("Invalid Email Entered");
+        alert("Enter valid Email");
+      });
+      return;
+    }
+    setInvalidEmail("");
+
+    axios
+      .post("http://localhost:5000/employees", formData)
+      .then((response) => {
+        console.log(response.data.message);
+        onAddEmployee(response.data.employee);
+
+        navigate("/");
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.error("Server error:", error.response.data);
+          alert(`Server error: ${error.response.data.message}`);
+        } else if (error.request) {
+          console.error("Network error:", error.request);
+          alert(
+            "Internet Not connect Please check your connection and try it again."
+          );
+        } else {
+          console.error("Error:", error.message);
+          alert(`Error: ${error.message}`);
+        }
+      });
+  };
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   // Valid Email
+  //   if (!emailPattern.test(formData.email)) {
+  //     setInvalidEmail(() => {
+  //       console.log("Invalid Email ENtered");
+  //       alert("Enter valid Email");
+  //     });
+  //     return;
+  //   }
+  //   setInvalidEmail("");
+  //   onAddEmployee(formData);
+  //   navigate("/");
+  // };
+
+*/
