@@ -30,7 +30,6 @@ const AddEmployee = ({ onAddEmployee, fetchEmployees, employees }) => {
   };
 
   const addHobby = () => {
-    // only upto 3  hobbies only
     if (formData.hobbies.length < 3) {
       setFormData({ ...formData, hobbies: [...formData.hobbies, ""] });
     }
@@ -72,18 +71,8 @@ const AddEmployee = ({ onAddEmployee, fetchEmployees, employees }) => {
       await fetchEmployees();
       navigate("/Home");
     } catch (error) {
-      if (error.response) {
-        console.error("Server error:", error.response.data);
-        alert(`Server error: ${error.response.data.message}`);
-      } else if (error.request) {
-        console.error("Network error:", error.request);
-        alert(
-          "Internet Not connect Please check your connection and try it again."
-        );
-      } else {
-        console.error("Error:", error.message);
-        alert(`Error: ${error.message}`);
-      }
+      console.error("Error:", error.message);
+      alert(`Error: ${error.message}`);
     }
   };
 

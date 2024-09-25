@@ -53,8 +53,7 @@ const EditEmpployee = ({ employees, onUpdateEmployee }) => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    // Valid Email
+    e.preventDefault(); 
     if (!emailPattern.test(formData.email)) {
       setInvalidEmail(() => {
         console.log("Invalid Email ENtered");

@@ -15,8 +15,14 @@ import Temporary from "./components3/Temporary";
 const App = () => {
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
+  const [cars, setCars] = useState([]);
 
-  // const gettingEmployeeId = (employees) => {};
+  useEffect(() => {
+    fetchEmployees();
+    fetchDepartments();
+    Cars_data();
+  }, []);
+
   const fetchEmployees = () => {
     fetch("http://localhost:5000/employees")
       .then((response) => response.json())
@@ -29,10 +35,29 @@ const App = () => {
       });
   };
 
-  useEffect(() => {
-    fetchEmployees();
-    fetchDepartments();
-  }, []);
+  const fetchDepartments = () => {
+    fetch("http://localhost:5000/departments")
+      .then((response) => response.json())
+      .then((data) => {
+        setDepartments(data);
+      })
+      .then((data) => {
+        console.log("ddepartment data ------>",data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const Cars_data = () => {
+    fetch("http://localhost:5000/cars")
+      .then((response) => response.json())
+      .then((data) => {
+        setCars(data);
+      }).then((data) => console.log(data));
+  };
+
+  // console.log(cars);
 
   const addEmployee = (employee) => {
     setEmployees([...employees, { id: employees.length + 1, ...employee }]);
@@ -55,24 +80,6 @@ const App = () => {
     setEmployees(employees.filter((employee) => employee.id !== id));
     console.log(`Employee deleted`);
   };
-
-  const fetchDepartments = () => {
-    fetch("http://localhost:5000/departments")
-      .then((response) => response.json())
-      .then((data) => {
-        setDepartments(data);
-      })
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  };
-
-  useEffect(() => {
-    fetchDepartments();
-  }, []);
 
   const addDepartment = (department) => {
     setDepartments([

@@ -9,12 +9,18 @@ const port = 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
-// employee db
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "82DKdk63**911",
   database: "Employees",
+});
+
+const carData = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "82DKdk63**911",
+  database: "cars",
 });
 
 db.connect((err) => {
@@ -25,12 +31,25 @@ db.connect((err) => {
   console.log("Connected to the MySQL database.");
 });
 
+
 const employeesData = "";
 
 app.get("/employees", (req, res) => {
   const query = "SELECT * FROM Employee";
 
   db.query(query, (err, results) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+
+    res.json(results);
+  });
+});
+
+app.get("/cars", (req, res) => {
+  const query = "SELECT * FROM car_dekho";
+
+  carData.query(query, (err, results) => {
     if (err) {
       return res.status(500).send(err);
     }
@@ -81,8 +100,6 @@ app.delete("/employees/:id", (req, res) => {
   });
 });
 
-// GETTING DATA endpoints
-// crct
 app.get("/departments", (req, res) => {
   const query = "SELECT * FROM departments";
   db.query(query, (err, results) => {
@@ -94,8 +111,6 @@ app.get("/departments", (req, res) => {
   });
 });
 
-// ADDING DATA
-// correct
 app.post("/departments", (req, res) => {
   const { name, head, location } = req.body;
   const query =

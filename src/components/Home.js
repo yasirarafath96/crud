@@ -18,24 +18,11 @@ const Home = ({ employees, onDeleteEmployee }) => {
         .then((response) => {
           console.log(response.data.message);
           onDeleteEmployee(employeeToDelete);
-          setEmployeeToDelete(null); // Reset the state after deletion
+          setEmployeeToDelete(null);
         })
         .catch((error) => {
-          if (error.response) {
-            // Server responded with a status other than 200 range
-            console.error("Server error:", error.response.data);
-            alert(`Server error: ${error.response.data.message}`);
-          } else if (error.request) {
-            // Request was made but no response was received
-            console.error("Network error:", error.request);
-            alert(
-              "Internet Not connect Please check your connection and try it again."
-            );
-          } else {
-            // Something else caused the error
-            console.error("Error:", error.message);
-            alert(`Error: ${error.message}`);
-          }
+          console.error("Error:", error.message);
+          alert(`Error: ${error.message}`);
         });
     }
   };
@@ -79,7 +66,7 @@ const Home = ({ employees, onDeleteEmployee }) => {
               <td>
                 <button
                   className="btn btn-primary me-2"
-                  onClick={() => navigate(`/employee/${employee.id}`)   }
+                  onClick={() => navigate(`/employee/${employee.id}`)}
                 >
                   Edit
                 </button>
